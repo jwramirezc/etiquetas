@@ -106,66 +106,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Etiquetas de prueba
   const testTags = [
-    { name: 'Urgente', color: '#F55753' }, // Danger
-    { name: 'Importante', color: '#F8D053' }, // Warning
-    { name: 'Cliente', color: '#48B0F7' }, // Complete (azul brillante)
-    { name: 'Interno', color: '#10CFBD' }, // Success (verde agua)
-    { name: 'Revisión', color: '#A47AE2' }, // Complementario a Complete (morado suave)
-    { name: 'Aprobado', color: '#10CFBD' }, // Success
-    { name: 'Pendiente', color: '#F8A723' }, // Más fuerte que Warning
-    { name: 'Soporte', color: '#3B4752' }, // Text-Base (gris oscuro)
-    { name: 'Recordatorio', color: '#F55753' }, // Igual que Urgente
-    { name: 'General', color: '#90A4AE' }, // Gris claro neutro
+    { id: 1, name: 'Urgente', color: '#F55753' }, // Danger
+    { id: 2, name: 'Importante', color: '#F8D053' }, // Warning
+    { id: 3, name: 'Cliente', color: '#48B0F7' }, // Complete (azul brillante)
+    { id: 4, name: 'Interno', color: '#10CFBD' }, // Success (verde agua)
+    { id: 5, name: 'Revisión', color: '#A47AE2' }, // Complementario a Complete (morado suave)
+    { id: 6, name: 'Aprobado', color: '#10CFBD' }, // Success
+    { id: 7, name: 'Pendiente', color: '#F8A723' }, // Más fuerte que Warning
+    { id: 8, name: 'Soporte', color: '#3B4752' }, // Text-Base (gris oscuro)
+    { id: 9, name: 'Recordatorio', color: '#F55753' }, // Igual que Urgente
+    { id: 10, name: 'Sin etiqueta', color: '#90A4AE' }, // Gris claro neutro
   ];
 
   // Add this after the testTags array
   const tagItems = {
-    Urgente: [
+    1: [
+      // Urgente
       { id: 1, text: 'Revisión de seguridad crítica' },
       { id: 2, text: 'Actualización de emergencia' },
       { id: 3, text: 'Incidente de producción' },
     ],
-    Importante: [
+    2: [
+      // Importante
       { id: 1, text: 'Reunión de planificación trimestral' },
       { id: 2, text: 'Presentación ejecutiva' },
       { id: 3, text: 'Revisión de presupuesto' },
     ],
-    Cliente: [
+    3: [
+      // Cliente
       { id: 1, text: 'Propuesta comercial' },
       { id: 2, text: 'Contrato de servicio' },
       { id: 3, text: 'Reporte de satisfacción' },
     ],
-    Interno: [
+    4: [
+      // Interno
       { id: 1, text: 'Política de recursos humanos' },
       { id: 2, text: 'Manual de procedimientos' },
       { id: 3, text: 'Guía de onboarding' },
     ],
-    Revisión: [
+    5: [
+      // Revisión
       { id: 1, text: 'Documento técnico' },
       { id: 2, text: 'Código fuente' },
       { id: 3, text: 'Especificaciones de diseño' },
     ],
-    Aprobado: [
+    6: [
+      // Aprobado
       { id: 1, text: 'Proyecto finalizado' },
       { id: 2, text: 'Cambios implementados' },
       { id: 3, text: 'Versión estable' },
     ],
-    Pendiente: [
+    7: [
+      // Pendiente
       { id: 1, text: 'Tareas pendientes' },
       { id: 2, text: 'Seguimiento de proyecto' },
       { id: 3, text: 'Lista de verificación' },
     ],
-    Soporte: [
+    8: [
+      // Soporte
       { id: 1, text: 'Guía de solución de problemas' },
       { id: 2, text: 'Base de conocimientos' },
       { id: 3, text: 'FAQ actualizado' },
     ],
-    Recordatorio: [
+    9: [
+      // Recordatorio
       { id: 1, text: 'Reunión semanal' },
       { id: 2, text: 'Entrega de reportes' },
       { id: 3, text: 'Revisión de objetivos' },
     ],
-    General: [
+    10: [
+      // General
       { id: 1, text: 'Notas de la reunión' },
       { id: 2, text: 'Documentación general' },
       { id: 3, text: 'Información de referencia' },
@@ -184,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tagDiv.dataset.index = index;
 
       // Get items for this tag
-      const items = tagItems[tag.name] || [];
+      const items = tagItems[tag.id] || [];
 
       tagDiv.innerHTML = `
         <div class="tag-card">
@@ -309,12 +319,13 @@ document.addEventListener('DOMContentLoaded', () => {
   window.editItem = function (tagIndex, itemId) {
     // Get the tag and item data
     const tag = testTags[tagIndex];
-    const items = tagItems[tag.name] || [];
+    const items = tagItems[tag.id] || [];
     const item = items.find(i => i.id === itemId);
 
     if (item) {
       // Store the item data in localStorage before redirecting
       const itemToEdit = {
+        tagId: tag.id,
         tagName: tag.name,
         tagColor: tag.color,
         itemId: item.id,
@@ -330,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.deleteItem = function (tagIndex, itemId) {
     // Get the tag and item data
     const tag = testTags[tagIndex];
-    const items = tagItems[tag.name] || [];
+    const items = tagItems[tag.id] || [];
     const itemIndex = items.findIndex(i => i.id === itemId);
 
     if (itemIndex !== -1) {
