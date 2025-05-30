@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Pendiente', color: '#F8A723' }, // Más fuerte que Warning
     { name: 'Soporte', color: '#3B4752' }, // Text-Base (gris oscuro)
     { name: 'Recordatorio', color: '#F55753' }, // Igual que Urgente
-    { name: 'General', color: '#90A4AE' }, // Gris claro neutro
+    { name: 'Sin Etiqueta', color: '#90A4AE' }, // Gris claro neutro
   ];
 
   // Renderizar etiquetas de prueba
@@ -94,33 +94,53 @@ document.addEventListener('DOMContentLoaded', () => {
       tagDiv.dataset.index = index;
       tagDiv.innerHTML = `
         <div class="tag-card">
-          <button class="drag-handle btn btn-link p-0 me-2">
-            <i class="bi bi-grip-vertical"></i>
-          </button>
-          <span class="tag-color" style="background:${tag.color}"></span>
-          <span class="tag-name">${tag.name}</span>
-          <div class="dropdown">
-            <button class="btn btn-link p-0 tag-options" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-three-dots-vertical"></i>
+          <div class="tag-header" style="cursor: pointer;">
+            <button class="drag-handle btn btn-link p-0 me-2">
+              <i class="bi bi-grip-vertical"></i>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#" onclick="editTag(${index})">
-                <i class="bi bi-pencil me-2"></i>Editar
-              </a></li>
-              <li><a class="dropdown-item" href="#" onclick="deleteTag(${index})">
-                <i class="bi bi-trash me-2"></i>Eliminar
-              </a></li>
-              <li><a class="dropdown-item" href="#" onclick="shareTag(${index})">
-                <i class="bi bi-share me-2"></i>Compartir
-              </a></li>
-            </ul>
+            <span class="tag-color" style="background:${tag.color}"></span>
+            <span class="tag-name">${tag.name}</span>
+            <div class="dropdown">
+              <button class="btn btn-link p-0 tag-options" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#" onclick="editTag(${index})">
+                  <i class="bi bi-pencil me-2"></i>Editar
+                </a></li>
+                <li><a class="dropdown-item" href="#" onclick="deleteTag(${index})">
+                  <i class="bi bi-trash me-2"></i>Eliminar
+                </a></li>
+                <li><a class="dropdown-item" href="#" onclick="shareTag(${index})">
+                  <i class="bi bi-share me-2"></i>Compartir
+                </a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="tag-content" style="display: none; padding: 10px; border-top: 1px solid #e0e0e0; margin-top: 8px;">
+            <p class="mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p class="mb-0">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
           </div>
         </div>
       `;
       tagsList.appendChild(tagDiv);
     });
 
-    // Implementar drag and drop
+    // Add click event for expanding/collapsing content
+    const tagHeaders = document.querySelectorAll('.tag-header');
+    tagHeaders.forEach(header => {
+      header.addEventListener('click', e => {
+        // Prevent click if clicking on dropdown or drag handle
+        if (e.target.closest('.dropdown') || e.target.closest('.drag-handle')) {
+          return;
+        }
+        const content = header.nextElementSibling;
+        const isExpanded = content.style.display !== 'none';
+        content.style.display = isExpanded ? 'none' : 'block';
+      });
+    });
+
+    // Implement drag and drop
     const tagCards = document.querySelectorAll('.tag-card');
     tagCards.forEach(card => {
       const parent = card.parentElement;
