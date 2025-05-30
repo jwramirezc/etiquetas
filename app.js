@@ -302,7 +302,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.deleteTag = function (index) {
     console.log('Eliminar etiqueta:', testTags[index]);
-    // TODO: Implementar eliminación
+
+    // Remove the tag from the array
+    testTags.splice(index, 1);
+
+    // Show success alert
+    const alertContainer = document.getElementById('alertContainer');
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-success alert-dismissible fade show';
+    alert.role = 'alert';
+    alert.innerHTML = `
+      Etiqueta eliminada correctamente
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    alertContainer.appendChild(alert);
+
+    // Remove the alert after 3 seconds
+    setTimeout(() => {
+      alert.classList.remove('show');
+      setTimeout(() => {
+        alert.remove();
+      }, 150);
+    }, 3000);
+
+    // Re-render the tags to update the view
+    renderTags();
   };
 
   window.shareTag = function (index) {
