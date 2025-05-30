@@ -1,6 +1,42 @@
 // Estructura básica para manejar plantillas
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Check if we're in edit mode for an item
+  const editingItem = localStorage.getItem('editingItem');
+  if (editingItem) {
+    const item = JSON.parse(editingItem);
+
+    // Update page title and section title
+    document.getElementById('pageTitle').textContent = 'Editar Item';
+    document.getElementById('sectionTitle').textContent = 'Editar Item';
+
+    // Fill the form with the item data
+    document.getElementById('templateName').value = item.tagName;
+    document.getElementById('templateText').value = item.itemText;
+
+    // Clear the editing item from localStorage
+    localStorage.removeItem('editingItem');
+  }
+
+  // Check if we're in edit mode
+  const editingTag = localStorage.getItem('editingTag');
+  if (editingTag) {
+    const tag = JSON.parse(editingTag);
+
+    // Update page title and section title
+    document.getElementById('pageTitle').textContent = 'Editar Plantilla';
+    document.getElementById('sectionTitle').textContent = 'Editar Plantilla';
+
+    // Fill the form with the tag data
+    document.getElementById('templateName').value = tag.name;
+    document.getElementById('templateText').value = tag.items
+      .map(item => item.text)
+      .join('\n');
+
+    // Clear the editing tag from localStorage
+    localStorage.removeItem('editingTag');
+  }
+
   // Elementos del DOM
   const templateForm = document.getElementById('templateForm');
   const templatesList = document.getElementById('templatesList');
@@ -79,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Pendiente', color: '#F8A723' }, // Más fuerte que Warning
     { name: 'Soporte', color: '#3B4752' }, // Text-Base (gris oscuro)
     { name: 'Recordatorio', color: '#F55753' }, // Igual que Urgente
-    { name: 'Sin Etiqueta', color: '#90A4AE' }, // Gris claro neutro
+    { name: 'General', color: '#90A4AE' }, // Gris claro neutro
   ];
 
   // Add this after the testTags array
@@ -271,13 +307,58 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.editItem = function (tagIndex, itemId) {
-    console.log('Editar item:', { tagIndex, itemId });
-    // TODO: Implementar edición
+    // Get the tag and item data
+    const tag = testTags[tagIndex];
+    const items = tagItems[tag.name] || [];
+    const item = items.find(i => i.id === itemId);
+
+    if (item) {
+      // Store the item data in localStorage before redirecting
+      const itemToEdit = {
+        tagName: tag.name,
+        tagColor: tag.color,
+        itemId: item.id,
+        itemText: item.text,
+      };
+      localStorage.setItem('editingItem', JSON.stringify(itemToEdit));
+
+      // Redirect to template.html
+      window.location.href = 'template.html';
+    }
   };
 
   window.deleteItem = function (tagIndex, itemId) {
-    console.log('Eliminar item:', { tagIndex, itemId });
-    // TODO: Implementar eliminación
+    // Get the tag and item data
+    const tag = testTags[tagIndex];
+    const items = tagItems[tag.name] || [];
+    const itemIndex = items.findIndex(i => i.id === itemId);
+
+    if (itemIndex !== -1) {
+      // Remove the item from the array
+      items.splice(itemIndex, 1);
+
+      // Show success alert
+      const alertContainer = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = 'alert alert-success alert-dismissible fade show';
+      alert.role = 'alert';
+      alert.innerHTML = `
+        Plantilla eliminada correctamente
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      alertContainer.appendChild(alert);
+
+      // Remove the alert after 3 seconds
+      setTimeout(() => {
+        alert.classList.remove('show');
+        setTimeout(() => {
+          alert.remove();
+        }, 150);
+      }, 3000);
+
+      // Re-render the tags to update the view
+      renderTags();
+    }
   };
 
   // Inicializar
