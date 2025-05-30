@@ -33,6 +33,8 @@ body {
   font-size: 0.85rem;
   color: #666;
   line-height: 1.4;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .tag-card {
@@ -149,4 +151,25 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.list-group-item {
+  border: none;
+  padding: 8px 0;
+  background: transparent;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+}
+
+.item-actions .btn-link {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.item-actions .btn-link:hover {
+  color: #333;
 }

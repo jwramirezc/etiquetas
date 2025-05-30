@@ -82,7 +82,61 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Sin Etiqueta', color: '#90A4AE' }, // Gris claro neutro
   ];
 
-  // Renderizar etiquetas de prueba
+  // Add this after the testTags array
+  const tagItems = {
+    Urgente: [
+      { id: 1, text: 'Revisión de seguridad crítica' },
+      { id: 2, text: 'Actualización de emergencia' },
+      { id: 3, text: 'Incidente de producción' },
+    ],
+    Importante: [
+      { id: 1, text: 'Reunión de planificación trimestral' },
+      { id: 2, text: 'Presentación ejecutiva' },
+      { id: 3, text: 'Revisión de presupuesto' },
+    ],
+    Cliente: [
+      { id: 1, text: 'Propuesta comercial' },
+      { id: 2, text: 'Contrato de servicio' },
+      { id: 3, text: 'Reporte de satisfacción' },
+    ],
+    Interno: [
+      { id: 1, text: 'Política de recursos humanos' },
+      { id: 2, text: 'Manual de procedimientos' },
+      { id: 3, text: 'Guía de onboarding' },
+    ],
+    Revisión: [
+      { id: 1, text: 'Documento técnico' },
+      { id: 2, text: 'Código fuente' },
+      { id: 3, text: 'Especificaciones de diseño' },
+    ],
+    Aprobado: [
+      { id: 1, text: 'Proyecto finalizado' },
+      { id: 2, text: 'Cambios implementados' },
+      { id: 3, text: 'Versión estable' },
+    ],
+    Pendiente: [
+      { id: 1, text: 'Tareas pendientes' },
+      { id: 2, text: 'Seguimiento de proyecto' },
+      { id: 3, text: 'Lista de verificación' },
+    ],
+    Soporte: [
+      { id: 1, text: 'Guía de solución de problemas' },
+      { id: 2, text: 'Base de conocimientos' },
+      { id: 3, text: 'FAQ actualizado' },
+    ],
+    Recordatorio: [
+      { id: 1, text: 'Reunión semanal' },
+      { id: 2, text: 'Entrega de reportes' },
+      { id: 3, text: 'Revisión de objetivos' },
+    ],
+    General: [
+      { id: 1, text: 'Notas de la reunión' },
+      { id: 2, text: 'Documentación general' },
+      { id: 3, text: 'Información de referencia' },
+    ],
+  };
+
+  // Update the renderTags function
   function renderTags() {
     if (!tagsList) return;
 
@@ -92,6 +146,10 @@ document.addEventListener('DOMContentLoaded', () => {
       tagDiv.className = 'col-md-4';
       tagDiv.draggable = true;
       tagDiv.dataset.index = index;
+
+      // Get items for this tag
+      const items = tagItems[tag.name] || [];
+
       tagDiv.innerHTML = `
         <div class="tag-card">
           <div class="tag-header" style="cursor: pointer;">
@@ -118,8 +176,28 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
           <div class="tag-content" style="display: none; padding: 10px; border-top: 1px solid #e0e0e0; margin-top: 8px;">
-            <p class="mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <p class="mb-0">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <ul class="list-group list-group-flush">
+              ${items
+                .map(
+                  item => `
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <span>${item.text}</span>
+                  <div class="item-actions">
+                    <button class="btn btn-link btn-sm p-0 me-2" onclick="insertItem(${index}, ${item.id})" title="Insertar">
+                      <i class="bi bi-plus-circle"></i>
+                    </button>
+                    <button class="btn btn-link btn-sm p-0 me-2" onclick="editItem(${index}, ${item.id})" title="Editar">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-link btn-sm p-0" onclick="deleteItem(${index}, ${item.id})" title="Eliminar">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </li>
+              `
+                )
+                .join('')}
+            </ul>
           </div>
         </div>
       `;
@@ -184,6 +262,22 @@ document.addEventListener('DOMContentLoaded', () => {
   window.shareTag = function (index) {
     console.log('Compartir etiqueta:', testTags[index]);
     // TODO: Implementar compartir
+  };
+
+  // Add these new functions for item actions
+  window.insertItem = function (tagIndex, itemId) {
+    console.log('Insertar item:', { tagIndex, itemId });
+    // TODO: Implementar inserción
+  };
+
+  window.editItem = function (tagIndex, itemId) {
+    console.log('Editar item:', { tagIndex, itemId });
+    // TODO: Implementar edición
+  };
+
+  window.deleteItem = function (tagIndex, itemId) {
+    console.log('Eliminar item:', { tagIndex, itemId });
+    // TODO: Implementar eliminación
   };
 
   // Inicializar
