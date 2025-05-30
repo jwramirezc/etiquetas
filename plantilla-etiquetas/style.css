@@ -1,0 +1,139 @@
+body {
+  background-color: #f1f3f3;
+}
+
+#templatesList .list-group-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.template-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+}
+
+.template-tags {
+  font-size: 0.9em;
+  color: #888;
+}
+
+.tag-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tag-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 14px;
+  border: none;
+}
+
+.tag-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.tag-options {
+  color: #888;
+  cursor: pointer;
+  font-size: 1.3em;
+  margin-left: 10px;
+  transition: color 0.2s;
+}
+.tag-options:hover {
+  color: #333;
+}
+
+.drag-handle {
+  color: #888;
+  cursor: grab;
+  transition: color 0.2s;
+}
+
+.drag-handle:hover {
+  color: #333;
+}
+
+.dragging {
+  opacity: 0.5;
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu {
+  font-size: 0.8rem;
+}
+
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.selected-tag {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  border: 1px solid #e0e0e0;
+}
+
+.selected-tag-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.remove-tag {
+  color: #666;
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.remove-tag:hover {
+  color: #000000;
+}
+
+.toast {
+  background: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast-header {
+  border-bottom: none;
+}
+
+#tagInput {
+  font-size: 0.8rem;
+  border: none;
+  outline-style: none;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
