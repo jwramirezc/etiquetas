@@ -1,39 +1,39 @@
 // Estructura básica para manejar plantillas
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Check if we're in edit mode for an item
+  // Verificar si estamos en modo de edición para un ítem
   const editingItem = localStorage.getItem('editingItem');
   if (editingItem) {
     const item = JSON.parse(editingItem);
 
-    // Update page title and section title
+    // Actualizar el título de la página y la sección
     document.getElementById('pageTitle').textContent = 'Editar Item';
     document.getElementById('sectionTitle').textContent = 'Editar Item';
 
-    // Fill the form with the item data
+    // Rellenar el formulario con los datos del ítem
     document.getElementById('templateName').value = item.tagName;
     document.getElementById('templateText').value = item.itemText;
 
-    // Clear the editing item from localStorage
+    // Limpiar el ítem en edición del localStorage
     localStorage.removeItem('editingItem');
   }
 
-  // Check if we're in edit mode
+  // Verificar si estamos en modo de edición de etiqueta
   const editingTag = localStorage.getItem('editingTag');
   if (editingTag) {
     const tag = JSON.parse(editingTag);
 
-    // Update page title and section title
+    // Actualizar el título de la página y la sección
     document.getElementById('pageTitle').textContent = 'Editar Plantilla';
     document.getElementById('sectionTitle').textContent = 'Editar Plantilla';
 
-    // Fill the form with the tag data
+    // Rellenar el formulario con los datos de la etiqueta
     document.getElementById('templateName').value = tag.name;
     document.getElementById('templateText').value = tag.items
       .map(item => item.text)
       .join('\n');
 
-    // Clear the editing tag from localStorage
+    // Limpiar la etiqueta en edición del localStorage
     localStorage.removeItem('editingTag');
   }
 
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: 10, name: 'Sin etiqueta', color: '#90A4AE' }, // Gris claro neutro
   ];
 
-  // Add this after the testTags array
+  // Agregar esto después del array testTags
   const tagItems = {
     1: [
       // Urgente
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tagDiv.draggable = true;
       tagDiv.dataset.index = index;
 
-      // Get items for this tag
+      // Obtener ítems para esta etiqueta
       const items = tagItems[tag.id] || [];
 
       tagDiv.innerHTML = `
@@ -253,11 +253,11 @@ document.addEventListener('DOMContentLoaded', () => {
       tagsList.appendChild(tagDiv);
     });
 
-    // Add click event for expanding/collapsing content
+    // Agregar evento click para expandir/colapsar contenido
     const tagHeaders = document.querySelectorAll('.tag-header');
     tagHeaders.forEach(header => {
       header.addEventListener('click', e => {
-        // Prevent click if clicking on dropdown or drag handle
+        // Evitar el click si es en el dropdown o en el ícono de arrastre
         if (e.target.closest('.dropdown') || e.target.closest('.drag-handle')) {
           return;
         }
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Implement drag and drop
+    // Implementar arrastrar y soltar
     const tagCards = document.querySelectorAll('.tag-card');
     tagCards.forEach(card => {
       const parent = card.parentElement;
@@ -306,10 +306,10 @@ document.addEventListener('DOMContentLoaded', () => {
   window.deleteTag = function (index) {
     console.log('Eliminar etiqueta:', testTags[index]);
 
-    // Remove the tag from the array
+    // Eliminar la etiqueta del arreglo
     testTags.splice(index, 1);
 
-    // Show success alert
+    // Mostrar alerta de éxito
     const alertContainer = document.getElementById('alertContainer');
     const alert = document.createElement('div');
     alert.className = 'alert alert-success alert-dismissible fade show';
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 150);
     }, 3000);
 
-    // Re-render the tags to update the view
+    // Re-renderizar las etiquetas para actualizar la vista
     renderTags();
   };
 
@@ -337,20 +337,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // TODO: Implementar compartir
   };
 
-  // Add these new functions for item actions
+  // Agregar estas nuevas funciones para las acciones de ítems
   window.insertItem = function (tagIndex, itemId) {
     console.log('Insertar item:', { tagIndex, itemId });
     // TODO: Implementar inserción
   };
 
   window.editItem = function (tagIndex, itemId) {
-    // Get the tag and item data
+    // Obtener los datos de la etiqueta y el ítem
     const tag = testTags[tagIndex];
     const items = tagItems[tag.id] || [];
     const item = items.find(i => i.id === itemId);
 
     if (item) {
-      // Store the item data in localStorage before redirecting
+      // Guardar los datos del ítem en localStorage antes de redirigir
       const itemToEdit = {
         tagId: tag.id,
         tagName: tag.name,
@@ -360,22 +360,22 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       localStorage.setItem('editingItem', JSON.stringify(itemToEdit));
 
-      // Redirect to template.html
+      // Redirigir a template.html
       window.location.href = 'template.html';
     }
   };
 
   window.lockItem = function (tagIndex, itemId) {
-    // Get the tag and item data
+    // Obtener los datos de la etiqueta y el ítem
     const tag = testTags[tagIndex];
     const items = tagItems[tag.id] || [];
     const item = items.find(i => i.id === itemId);
 
     if (item) {
-      // Toggle lock status
+      // Alternar estado de bloqueo
       item.locked = !item.locked;
 
-      // Show success alert
+      // Mostrar alerta de éxito
       const alertContainer = document.getElementById('alertContainer');
       const alert = document.createElement('div');
       alert.className = 'alert alert-success alert-dismissible fade show';
@@ -396,22 +396,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 150);
       }, 3000);
 
-      // Re-render the tags to update the view
+      // Re-renderizar las etiquetas para actualizar la vista
       renderTags();
     }
   };
 
   window.deleteItem = function (tagIndex, itemId) {
-    // Get the tag and item data
+    // Obtener los datos de la etiqueta y el ítem
     const tag = testTags[tagIndex];
     const items = tagItems[tag.id] || [];
     const itemIndex = items.findIndex(i => i.id === itemId);
 
     if (itemIndex !== -1) {
-      // Remove the item from the array
+      // Eliminar el ítem del arreglo
       items.splice(itemIndex, 1);
 
-      // Show success alert
+      // Mostrar alerta de éxito
       const alertContainer = document.getElementById('alertContainer');
       const alert = document.createElement('div');
       alert.className = 'alert alert-success alert-dismissible fade show';
@@ -430,7 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 150);
       }, 3000);
 
-      // Re-render the tags to update the view
+      // Re-renderizar las etiquetas para actualizar la vista
       renderTags();
     }
   };
