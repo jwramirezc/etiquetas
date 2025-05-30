@@ -230,10 +230,13 @@ document.addEventListener('DOMContentLoaded', () => {
                   <span>${item.text}</span>
                   <div class="item-actions">
                     <button class="btn btn-link btn-sm p-0 me-2" onclick="insertItem(${index}, ${item.id})" title="Insertar">
-                      <i class="bi bi-plus-circle"></i>
+                      <i class="bi bi-check"></i>
                     </button>
                     <button class="btn btn-link btn-sm p-0 me-2" onclick="editItem(${index}, ${item.id})" title="Editar">
                       <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-link btn-sm p-0 me-2" onclick="lockItem(${index}, ${item.id})" title="Bloquear">
+                      <i class="bi bi-lock"></i>
                     </button>
                     <button class="btn btn-link btn-sm p-0" onclick="deleteItem(${index}, ${item.id})" title="Eliminar">
                       <i class="bi bi-trash"></i>
@@ -359,6 +362,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Redirect to template.html
       window.location.href = 'template.html';
+    }
+  };
+
+  window.lockItem = function (tagIndex, itemId) {
+    // Get the tag and item data
+    const tag = testTags[tagIndex];
+    const items = tagItems[tag.id] || [];
+    const item = items.find(i => i.id === itemId);
+
+    if (item) {
+      // Toggle lock status
+      item.locked = !item.locked;
+
+      // Show success alert
+      const alertContainer = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = 'alert alert-success alert-dismissible fade show';
+      alert.role = 'alert';
+      alert.innerHTML = `
+        ${
+          item.locked ? 'Plantilla Compartida' : 'Plantilla Compartida'
+        } correctamente
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      alertContainer.appendChild(alert);
+
+      // Remove the alert after 3 seconds
+      setTimeout(() => {
+        alert.classList.remove('show');
+        setTimeout(() => {
+          alert.remove();
+        }, 150);
+      }, 3000);
+
+      // Re-render the tags to update the view
+      renderTags();
     }
   };
 
