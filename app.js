@@ -113,8 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function populateFormFromItem(item) {
     if (!item) return;
     pageTitle.textContent = sectionTitle.textContent = 'Editar Item';
-    templateName.value = item.tagName;
-    templateText.value = item.itemText;
+    templateName.value = item.itemText;
+    templateText.value =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
     localStorage.removeItem('editingItem');
   }
 
@@ -286,6 +287,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Redirigir a template.html
       window.location.href = 'template.html';
+    }
+  };
+
+  /**
+   * Inserta un ítem en la plantilla actual
+   * @param {number} tagIndex - Índice de la etiqueta en el array testTags
+   * @param {number} itemId - ID del ítem a insertar
+   */
+  window.insertItem = function (tagIndex, itemId) {
+    const tag = testTags[tagIndex];
+    const items = tagItems[tag.id] || [];
+    const item = items.find(i => i.id === itemId);
+
+    if (item) {
+      // Aquí iría la lógica para insertar el ítem
+      showAlert('Insertado correctamente');
+    }
+  };
+
+  /**
+   * Elimina un ítem de la etiqueta
+   * @param {number} tagIndex - Índice de la etiqueta en el array testTags
+   * @param {number} itemId - ID del ítem a eliminar
+   */
+  window.deleteItem = function (tagIndex, itemId) {
+    const tag = testTags[tagIndex];
+    const items = tagItems[tag.id] || [];
+    const item = items.find(i => i.id === itemId);
+
+    if (item) {
+      // Aquí iría la lógica para eliminar el ítem
+      showAlert('Eliminado correctamente');
+    }
+  };
+
+  /**
+   * Bloquea/desbloquea un ítem de la etiqueta
+   * @param {number} tagIndex - Índice de la etiqueta en el array testTags
+   * @param {number} itemId - ID del ítem a bloquear/desbloquear
+   */
+  window.lockItem = function (tagIndex, itemId) {
+    const tag = testTags[tagIndex];
+    const items = tagItems[tag.id] || [];
+    const item = items.find(i => i.id === itemId);
+
+    if (item) {
+      // Aquí iría la lógica para bloquear/desbloquear el ítem
+      showAlert('Permisos asignados');
     }
   };
 
