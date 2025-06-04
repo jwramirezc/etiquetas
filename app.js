@@ -344,6 +344,71 @@ document.addEventListener('DOMContentLoaded', () => {
   const tag = getEditingTag();
   if (tag) populateFormFromTag(tag);
 
+  // Cargar etiquetas guardadas al iniciar
+  const savedTags = localStorage.getItem('testTags');
+  const savedItems = localStorage.getItem('tagItems');
+  if (savedTags) {
+    testTags.length = 0; // Limpiar array existente
+    testTags.push(...JSON.parse(savedTags));
+  }
+  if (savedItems) {
+    Object.assign(tagItems, JSON.parse(savedItems));
+  }
+
+  // Manejo del formulario de etiquetas
+  const tagForm = document.getElementById('tagForm');
+  if (tagForm) {
+    tagForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const tagName = document.getElementById('tagName').value;
+      const tagColor = document.getElementById('tagColor').value;
+
+      // Crear nueva etiqueta
+      const newTag = {
+        id: testTags.length + 1,
+        name: tagName,
+        color: tagColor,
+      };
+
+      // Agregar la nueva etiqueta al array
+      testTags.push(newTag);
+
+      // Inicializar el array de items para la nueva etiqueta
+      tagItems[newTag.id] = [];
+
+      // Guardar en localStorage para persistencia
+      localStorage.setItem('testTags', JSON.stringify(testTags));
+      localStorage.setItem('tagItems', JSON.stringify(tagItems));
+
+      // Mostrar mensaje de éxito usando alerta de Bootstrap
+      const alertContainer = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = 'alert alert-success alert-dismissible fade show';
+      alert.role = 'alert';
+      alert.innerHTML = `
+        <i class="bi bi-check-circle me-2"></i>
+        Etiqueta guardada correctamente
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      alertContainer.appendChild(alert);
+
+      // Redirigir después de un breve delay
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1500);
+    });
+  }
+
+  // Renderizar las etiquetas después de cargar los datos
   if (templateForm) templateForm.addEventListener('submit', handleFormSubmit);
-  if (tagsList) renderTags();
+  if (tagsList) {
+    renderTags();
+    // Agregar listener para actualizar la vista cuando cambie el localStorage
+    window.addEventListener('storage', function (e) {
+      if (e.key === 'testTags' || e.key === 'tagItems') {
+        renderTags();
+      }
+    });
+  }
 });
