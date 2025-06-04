@@ -30,67 +30,216 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   // Objeto que contiene los ítems asociados a cada etiqueta
-  // Agregar esto después del array testTags
   const tagItems = {
     1: [
       // Urgente
-      { id: 1, text: 'Revisión de seguridad crítica' },
-      { id: 2, text: 'Actualización de emergencia' },
-      { id: 3, text: 'Incidente de producción' },
+      {
+        id: 1,
+        text: 'Revisión de seguridad crítica',
+        templateText:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+      },
+      {
+        id: 2,
+        text: 'Actualización de emergencia',
+        templateText:
+          'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.',
+      },
+      {
+        id: 3,
+        text: 'Incidente de producción',
+        templateText:
+          'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.',
+      },
     ],
     2: [
       // Importante
-      { id: 1, text: 'Reunión de planificación trimestral' },
-      { id: 2, text: 'Presentación ejecutiva' },
-      { id: 3, text: 'Revisión de presupuesto' },
+      {
+        id: 1,
+        text: 'Reunión de planificación trimestral',
+        templateText:
+          'Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.',
+      },
+      {
+        id: 2,
+        text: 'Presentación ejecutiva',
+        templateText:
+          'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.',
+      },
+      {
+        id: 3,
+        text: 'Revisión de presupuesto',
+        templateText:
+          'Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio.',
+      },
     ],
     3: [
       // Cliente
-      { id: 1, text: 'Propuesta comercial' },
-      { id: 2, text: 'Contrato de servicio' },
-      { id: 3, text: 'Reporte de satisfacción' },
+      {
+        id: 1,
+        text: 'Propuesta comercial',
+        templateText:
+          'Cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus.',
+      },
+      {
+        id: 2,
+        text: 'Contrato de servicio',
+        templateText:
+          'Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.',
+      },
+      {
+        id: 3,
+        text: 'Reporte de satisfacción',
+        templateText:
+          'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Ut enim ad minima veniam, quis nostrum exercitationem.',
+      },
     ],
     4: [
       // Interno
-      { id: 1, text: 'Política de recursos humanos' },
-      { id: 2, text: 'Manual de procedimientos' },
-      { id: 3, text: 'Guía de onboarding' },
+      {
+        id: 1,
+        text: 'Política de recursos humanos',
+        templateText:
+          'Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. At vero eos et accusamus et iusto odio.',
+      },
+      {
+        id: 2,
+        text: 'Manual de procedimientos',
+        templateText:
+          'Dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt.',
+      },
+      {
+        id: 3,
+        text: 'Guía de onboarding',
+        templateText:
+          'Mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.',
+      },
     ],
     5: [
       // Revisión
-      { id: 1, text: 'Documento técnico' },
-      { id: 2, text: 'Código fuente' },
-      { id: 3, text: 'Especificaciones de diseño' },
+      {
+        id: 1,
+        text: 'Documento técnico',
+        templateText:
+          'Id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates.',
+      },
+      {
+        id: 2,
+        text: 'Código fuente',
+        templateText:
+          'Repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.',
+      },
+      {
+        id: 3,
+        text: 'Especificaciones de diseño',
+        templateText:
+          'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae.',
+      },
     ],
     6: [
       // Aprobado
-      { id: 1, text: 'Proyecto finalizado' },
-      { id: 2, text: 'Cambios implementados' },
-      { id: 3, text: 'Versión estable' },
+      {
+        id: 1,
+        text: 'Proyecto finalizado',
+        templateText:
+          'Dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est.',
+      },
+      {
+        id: 2,
+        text: 'Cambios implementados',
+        templateText:
+          'Qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam.',
+      },
+      {
+        id: 3,
+        text: 'Versión estable',
+        templateText:
+          'Quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae.',
+      },
     ],
     7: [
       // Pendiente
-      { id: 1, text: 'Tareas pendientes' },
-      { id: 2, text: 'Seguimiento de proyecto' },
-      { id: 3, text: 'Lista de verificación' },
+      {
+        id: 1,
+        text: 'Tareas pendientes',
+        templateText:
+          'Consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti.',
+      },
+      {
+        id: 2,
+        text: 'Seguimiento de proyecto',
+        templateText:
+          'Quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum.',
+      },
+      {
+        id: 3,
+        text: 'Lista de verificación',
+        templateText:
+          'Facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est.',
+      },
     ],
     8: [
       // Soporte
-      { id: 1, text: 'Guía de solución de problemas' },
-      { id: 2, text: 'Base de conocimientos' },
-      { id: 3, text: 'FAQ actualizado' },
+      {
+        id: 1,
+        text: 'Guía de solución de problemas',
+        templateText:
+          'Omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum.',
+      },
+      {
+        id: 2,
+        text: 'Base de conocimientos',
+        templateText:
+          'Hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.',
+      },
+      {
+        id: 3,
+        text: 'FAQ actualizado',
+        templateText:
+          'Accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.',
+      },
     ],
     9: [
       // Recordatorio
-      { id: 1, text: 'Reunión semanal' },
-      { id: 2, text: 'Entrega de reportes' },
-      { id: 3, text: 'Revisión de objetivos' },
+      {
+        id: 1,
+        text: 'Reunión semanal',
+        templateText:
+          'Sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur.',
+      },
+      {
+        id: 2,
+        text: 'Entrega de reportes',
+        templateText:
+          'Adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis.',
+      },
+      {
+        id: 3,
+        text: 'Revisión de objetivos',
+        templateText:
+          'Suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem.',
+      },
     ],
     10: [
       // General
-      { id: 1, text: 'Notas de la reunión' },
-      { id: 2, text: 'Documentación general' },
-      { id: 3, text: 'Información de referencia' },
+      {
+        id: 1,
+        text: 'Notas de la reunión',
+        templateText:
+          'Eum fugiat quo voluptas nulla pariatur. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias.',
+      },
+      {
+        id: 2,
+        text: 'Documentación general',
+        templateText:
+          'Excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita.',
+      },
+      {
+        id: 3,
+        text: 'Información de referencia',
+        templateText:
+          'Distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.',
+      },
     ],
   };
 
@@ -114,8 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!item) return;
     pageTitle.textContent = sectionTitle.textContent = 'Editar Item';
     templateName.value = item.itemText;
-    templateText.value =
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+    templateText.value = item.templateText;
     localStorage.removeItem('editingItem');
   }
 
@@ -303,6 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tagColor: tag.color,
         itemId: item.id,
         itemText: item.text,
+        templateText: item.templateText,
       };
       localStorage.setItem('editingItem', JSON.stringify(itemToEdit));
 
