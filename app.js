@@ -411,4 +411,95 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Tag autocomplete functionality
+  const tagInput = document.getElementById('tagInput');
+  const tagContainer = document.getElementById('tagContainer');
+  const tagSuggestions = document.getElementById('tagSuggestions');
+  const selectedTags = new Set();
+
+  if (tagInput && tagContainer && tagSuggestions) {
+    // Function to create a tag pill
+    function createTagPill(tag) {
+      const pill = document.createElement('span');
+      pill.className = 'badge rounded-pill d-inline-flex align-items-center';
+      pill.style.backgroundColor = tag.color;
+      pill.innerHTML = `
+        ${tag.name}
+        <button type="button" class="btn-close btn-close-white ms-2" 
+          style="font-size: 0.5rem;" aria-label="Remove tag"></button>
+      `;
+
+      // Add click handler to remove tag
+      pill.querySelector('.btn-close').addEventListener('click', () => {
+        selectedTags.delete(tag.id);
+        pill.remove();
+      });
+
+      return pill;
+    }
+
+    // Function to filter and show suggestions
+    function showSuggestions(input) {
+      const value = input.toLowerCase();
+      const filteredTags = testTags.filter(
+        tag =>
+          tag.name.toLowerCase().includes(value) && !selectedTags.has(tag.id)
+      );
+
+      tagSuggestions.innerHTML = '';
+
+      if (filteredTags.length > 0) {
+        filteredTags.forEach(tag => {
+          const suggestion = document.createElement('a');
+          suggestion.className = 'dropdown-item d-flex align-items-center';
+          suggestion.innerHTML = `
+            <span class="tag-color me-2" style="width: 12px; height: 12px; border-radius: 50%; background-color: ${tag.color}"></span>
+            ${tag.name}
+          `;
+
+          suggestion.addEventListener('click', () => {
+            selectedTags.add(tag.id);
+            const pill = createTagPill(tag);
+            tagContainer.insertBefore(pill, tagInput);
+            tagInput.value = '';
+            tagSuggestions.classList.remove('show');
+          });
+
+          tagSuggestions.appendChild(suggestion);
+        });
+        tagSuggestions.classList.add('show');
+      } else {
+        tagSuggestions.classList.remove('show');
+      }
+    }
+
+    // Event listeners for tag input
+    tagInput.addEventListener('input', e => {
+      showSuggestions(e.target.value);
+    });
+
+    tagInput.addEventListener('focus', () => {
+      if (tagInput.value) {
+        showSuggestions(tagInput.value);
+      }
+    });
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', e => {
+      if (!tagContainer.contains(e.target)) {
+        tagSuggestions.classList.remove('show');
+      }
+    });
+
+    // Handle keyboard navigation
+    tagInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && tagSuggestions.querySelector('.dropdown-item')) {
+        e.preventDefault();
+        tagSuggestions.querySelector('.dropdown-item').click();
+      } else if (e.key === 'Escape') {
+        tagSuggestions.classList.remove('show');
+      }
+    });
+  }
 });
