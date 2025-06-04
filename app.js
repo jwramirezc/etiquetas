@@ -258,8 +258,29 @@ document.addEventListener('DOMContentLoaded', () => {
       tags: tags,
     };
     console.log('Guardando plantilla:', data);
-    successToast?.show();
-    setTimeout(() => (window.location.href = 'tags.html'), 1500);
+
+    // Show success alert
+    const alertContainer = document.getElementById('alertContainer');
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-success alert-dismissible fade show';
+    alert.role = 'alert';
+    alert.innerHTML = `
+      <i class="bi bi-check-circle me-2"></i>
+      Plantilla guardada correctamente
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    alertContainer.appendChild(alert);
+
+    // Remove alert after 3 seconds
+    setTimeout(() => {
+      alert.classList.remove('show');
+      setTimeout(() => alert.remove(), 150);
+    }, 3000);
+
+    // Redirect to index.html after showing the alert
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1500);
   }
 
   /**
