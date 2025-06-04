@@ -525,14 +525,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.editTag = function (index) {
     const tag = tags[index];
     if (!tag) return;
-    const newName = prompt('Editar nombre de etiqueta:', tag.name);
-    if (newName === null) return;
-    const newColor = prompt('Editar color de etiqueta (hex):', tag.color);
-    if (newColor === null) return;
-    tags[index].name = newName.trim() || tag.name;
-    tags[index].color = newColor || tag.color;
-    localStorage.setItem('tags', JSON.stringify(tags));
-    renderTags();
+    // Redirige a tag.html con el parámetro tagId
+    window.location.href = `tag.html?tagId=${encodeURIComponent(tag.id)}`;
   };
 
   window.deleteTag = function (index) {
