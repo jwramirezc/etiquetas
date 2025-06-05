@@ -2,194 +2,24 @@
 
 // ======== CARGA INICIAL DE DATOS ========
 
-// Carga etiquetas desde localStorage o usa valores por defecto
-let tags = JSON.parse(localStorage.getItem('tags')) || [
-  { id: 1, name: 'Urgente', color: '#F55753' },
-  { id: 2, name: 'Importante', color: '#F8D053' },
-  { id: 3, name: 'Cliente', color: '#48B0F7' },
-  { id: 4, name: 'Interno', color: '#6FD16F' },
-  { id: 5, name: 'Revisión', color: '#A463F2' },
-  { id: 6, name: 'Aprobado', color: '#198754' },
-  { id: 7, name: 'Pendiente', color: '#FFC107' },
-  { id: 8, name: 'Rechazado', color: '#DC3545' },
-  { id: 9, name: 'Recordatorio', color: '#0DCAF0' },
-  { id: 10, name: 'Otro', color: '#6C757D' },
-];
+// Carga etiquetas desde localStorage
+let tags = JSON.parse(localStorage.getItem('tags')) || [];
 
-// Carga plantillas desde localStorage o crea un arreglo con ejemplos basados en los items originales
-let templates = JSON.parse(localStorage.getItem('templates')) || [
-  // Tag 1: Urgente
-  {
-    id: 1,
-    text: 'Revisión de seguridad crítica',
-    templateText:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    tags: [1],
-  },
-  {
-    id: 2,
-    text: 'Actualización de emergencia',
-    templateText:
-      'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    tags: [1],
-  },
-  // Tag 2: Importante
-  {
-    id: 3,
-    text: 'Reunión de planificación trimestral',
-    templateText:
-      'Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.',
-    tags: [2],
-  },
-  {
-    id: 4,
-    text: 'Informe de presupuesto anual',
-    templateText:
-      'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-    tags: [2],
-  },
-  // Tag 3: Cliente
-  {
-    id: 5,
-    text: 'Onboarding de nuevo cliente',
-    templateText:
-      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.',
-    tags: [3],
-  },
-  {
-    id: 6,
-    text: 'Actualización de estado de proyecto',
-    templateText:
-      'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum.',
-    tags: [3],
-  },
-  // Tag 4: Interno
-  {
-    id: 7,
-    text: 'Permiso de vacaciones',
-    templateText:
-      'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.',
-    tags: [4],
-  },
-  {
-    id: 8,
-    text: 'Encuesta de clima laboral',
-    templateText:
-      'Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.',
-    tags: [4],
-  },
-  // Tag 5: Revisión
-  {
-    id: 9,
-    text: 'Revisión de contrato',
-    templateText:
-      'Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.',
-    tags: [5],
-  },
-  {
-    id: 10,
-    text: 'Checklist de auditoría',
-    templateText:
-      'Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.',
-    tags: [5],
-  },
-  // Tag 6: Aprobado
-  {
-    id: 11,
-    text: 'Proyecto finalizado',
-    templateText:
-      'Dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.',
-    tags: [6],
-  },
-  {
-    id: 12,
-    text: 'Cambios implementados',
-    templateText:
-      'Qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.',
-    tags: [6],
-  },
-  // Tag 7: Pendiente
-  {
-    id: 13,
-    text: 'Pago pendiente',
-    templateText:
-      'Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
-    tags: [7],
-  },
-  {
-    id: 14,
-    text: 'Firma de documento',
-    templateText:
-      'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.',
-    tags: [7],
-  },
-  // Tag 8: Rechazado
-  {
-    id: 15,
-    text: 'Propuesta rechazada',
-    templateText:
-      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.',
-    tags: [8],
-  },
-  {
-    id: 16,
-    text: 'Solicitud denegada',
-    templateText:
-      'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.',
-    tags: [8],
-  },
-  // Tag 9: Recordatorio
-  {
-    id: 17,
-    text: 'Reunión semanal',
-    templateText:
-      'Sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.',
-    tags: [9],
-  },
-  {
-    id: 18,
-    text: 'Entrega de reportes',
-    templateText:
-      'Adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.',
-    tags: [9],
-  },
-  // Tag 10: Otro
-  {
-    id: 19,
-    text: 'Plantilla genérica',
-    templateText:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    tags: [10],
-  },
-  {
-    id: 20,
-    text: 'Plantilla adicional',
-    templateText:
-      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    tags: [10],
-  },
-];
-
-// Si no existían en localStorage, persiste estos valores iniciales
-if (!localStorage.getItem('tags')) {
-  localStorage.setItem('tags', JSON.stringify(tags));
-}
-if (!localStorage.getItem('templates')) {
-  localStorage.setItem('templates', JSON.stringify(templates));
-}
+// Carga plantillas desde localStorage
+let templates = JSON.parse(localStorage.getItem('templates')) || [];
 
 // ======== FUNCIONES AUXILIARES ========
 
 // Genera un ID único para nuevas plantillas
 function generarNuevoTemplateId() {
-  let nextId = parseInt(localStorage.getItem('lastTemplateId') || '20', 10) + 1;
+  let nextId = parseInt(localStorage.getItem('lastTemplateId') || '0', 10) + 1;
   localStorage.setItem('lastTemplateId', nextId);
   return nextId;
 }
 
 // Genera un ID único para nuevas etiquetas
 function generarNuevoTagId() {
-  let nextId = parseInt(localStorage.getItem('lastTagId') || '10', 10) + 1;
+  let nextId = parseInt(localStorage.getItem('lastTagId') || '0', 10) + 1;
   localStorage.setItem('lastTagId', nextId);
   return nextId;
 }
