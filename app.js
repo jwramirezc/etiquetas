@@ -530,16 +530,37 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.deleteTag = function (index) {
-    if (!confirm('¿Seguro que deseas eliminar esta etiqueta?')) return;
-    const tagId = tags[index].id;
-    // Remover la etiqueta de todas las plantillas que la contenían
-    templates = templates.map(t => {
-      return { ...t, tags: t.tags.filter(tid => tid !== tagId) };
-    });
-    // Opcional: si deseas eliminar plantillas sin etiquetas, puedes filtrarlas aquí
+    const tag = tags[index];
+    if (!tag) return;
+
+    // Verificar si la etiqueta tiene plantillas asociadas
+    const plantillasConEstaEtiqueta = templates.filter(t =>
+      t.tags.includes(tag.id)
+    );
+
+    if (plantillasConEstaEtiqueta.length > 0) {
+      // Mostrar mensaje de error
+      const alert = document.createElement('div');
+      alert.className = 'alert alert-warning alert-dismissible fade show';
+      alert.role = 'alert';
+      alert.innerHTML = `
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        No se puede eliminar la etiqueta "${tag.name}" porque tiene ${plantillasConEstaEtiqueta.length} plantilla(s) asociada(s).
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      if (alertContainer) {
+        alertContainer.appendChild(alert);
+        setTimeout(() => alert.remove(), 3000);
+      }
+      return;
+    }
+
+    // Si no tiene plantillas, proceder con la eliminación
+    if (!confirm(`¿Seguro que deseas eliminar la etiqueta "${tag.name}"?`))
+      return;
+
     tags.splice(index, 1);
     localStorage.setItem('tags', JSON.stringify(tags));
-    localStorage.setItem('templates', JSON.stringify(templates));
     renderTags();
   };
 
@@ -572,12 +593,22 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.lockItem = function (tagIndex, itemId) {
-    alert('Funcionalidad de bloqueo pendiente de implementar.');
+    alert('Funcionalidad de permisos pendiente de implementar.');
   };
 
   window.deleteItem = function (tagIndex, itemId) {
-    if (!confirm('¿Eliminar esta plantilla?')) return;
-    templates = templates.filter(t => t.id !== itemId);
+    if (!confirm('¿Eliminar esta plantilla de esta etiqueta?')) return;
+    const tagId = tags[tagIndex].id;
+    // Encontrar la plantilla y remover solo esta etiqueta de sus tags
+    templates = templates.map(t => {
+      if (t.id === itemId) {
+        return {
+          ...t,
+          tags: t.tags.filter(tid => tid !== tagId),
+        };
+      }
+      return t;
+    });
     localStorage.setItem('templates', JSON.stringify(templates));
     renderTags();
   };
