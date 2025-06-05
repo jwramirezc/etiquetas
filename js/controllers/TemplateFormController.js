@@ -117,6 +117,27 @@ export default class TemplateFormController {
     this.tagContainerEl.appendChild(span);
   }
 
+  showAlert(message, type = 'warning') {
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-dismissible fade show`;
+    alert.role = 'alert';
+    alert.innerHTML = `
+      <i class="bi bi-${
+        type === 'success'
+          ? 'check-circle'
+          : type === 'warning'
+          ? 'exclamation-triangle'
+          : 'info-circle'
+      } me-2"></i>
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    if (this.alertContainerEl) {
+      this.alertContainerEl.appendChild(alert);
+      setTimeout(() => alert.remove(), 3000);
+    }
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     const nombre = this.nameInputEl.value.trim();
@@ -159,25 +180,9 @@ export default class TemplateFormController {
     TemplateRepository.save(templateInstance);
 
     // Mostrar alerta de éxito
-    const alerta = document.createElement('div');
-    alerta.className = 'alert alert-success alert-dismissible fade show';
-    alerta.role = 'alert';
-    alerta.innerHTML = `
-      <i class="bi bi-check-circle me-2"></i>
-      Plantilla guardada correctamente
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
-    this.alertContainerEl.appendChild(alerta);
+    this.showAlert('Plantilla guardada correctamente', 'success');
     setTimeout(() => {
       window.location.href = 'index.html';
     }, 1500);
-  }
-
-  showAlert(message, type = 'warning') {
-    this.alertContainerEl.innerHTML = '';
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type}`;
-    alertDiv.textContent = message;
-    this.alertContainerEl.appendChild(alertDiv);
   }
 }

@@ -10,6 +10,51 @@ export default class IndexController {
     // Inicialmente cargamos todos los tags y templates
     this.tags = TagRepository.getAll();
     this.templates = TemplateRepository.getAll();
+
+    // Crear el modal de confirmación si no existe
+    if (!document.getElementById('deleteConfirmModal')) {
+      const modalHTML = `
+        <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p id="deleteConfirmMessage"></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="deleteConfirmButton">Eliminar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+  }
+
+  showAlert(message, type = 'info') {
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-dismissible fade show`;
+    alert.role = 'alert';
+    alert.innerHTML = `
+      <i class="bi bi-${
+        type === 'success'
+          ? 'check-circle'
+          : type === 'warning'
+          ? 'exclamation-triangle'
+          : 'info-circle'
+      } me-2"></i>
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    if (this.alertContainerEl) {
+      this.alertContainerEl.appendChild(alert);
+      setTimeout(() => alert.remove(), 3000);
+    }
   }
 
   initialize() {
@@ -34,18 +79,10 @@ export default class IndexController {
   validateNewTemplate() {
     const tags = TagRepository.getAll();
     if (tags.length === 0) {
-      const alert = document.createElement('div');
-      alert.className = 'alert alert-warning alert-dismissible fade show';
-      alert.role = 'alert';
-      alert.innerHTML = `
-        <i class="bi bi-exclamation-triangle me-2"></i>
-        No hay etiquetas creadas. Por favor crea una antes de crear una plantilla.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      `;
-      if (this.alertContainerEl) {
-        this.alertContainerEl.appendChild(alert);
-        setTimeout(() => alert.remove(), 3000);
-      }
+      this.showAlert(
+        'No hay etiquetas creadas. Por favor crea una antes de crear una plantilla.',
+        'warning'
+      );
       return;
     }
     // If there are tags, proceed to template creation
@@ -227,31 +264,29 @@ export default class IndexController {
     // Verificar plantillas que usan esta etiqueta
     const templatesUsing = this.templates.filter(t => t.tags.includes(tag.id));
     if (templatesUsing.length > 0) {
-      const aviso = document.createElement('div');
-      aviso.className = 'alert alert-warning alert-dismissible fade show';
-      aviso.role = 'alert';
-      aviso.innerHTML = `
-        <i class="bi bi-exclamation-triangle me-2"></i>
-        No se puede eliminar la etiqueta "${tag.name}" porque tiene ${templatesUsing.length} plantilla(s) asociada(s).
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
-      if (this.alertContainerEl) {
-        this.alertContainerEl.appendChild(aviso);
-        setTimeout(() => aviso.remove(), 3000);
-      }
+      this.showAlert(
+        `No se puede eliminar la etiqueta "${tag.name}" porque tiene ${templatesUsing.length} plantilla(s) asociada(s).`,
+        'warning'
+      );
       return;
     }
-    if (!confirm(`¿Seguro que deseas eliminar la etiqueta "${tag.name}"?`))
-      return;
-    TagRepository.delete(tag.id);
-    this.tags = TagRepository.getAll();
-    this.renderTags();
+
+    this.showDeleteConfirm(
+      `¿Seguro que deseas eliminar la etiqueta "${tag.name}"?`,
+      () => {
+        TagRepository.delete(tag.id);
+        this.tags = TagRepository.getAll();
+        this.renderTags();
+      }
+    );
   }
 
   shareTag(index) {
     const tag = this.tags[index];
     if (!tag) return;
-    alert(
-      `Compartir la etiqueta "${tag.name}" con otros usuarios (pendiente de implementar).`
+    this.showAlert(
+      `Compartir la etiqueta "${tag.name}" con otros usuarios (pendiente de implementar).`,
+      'info'
     );
   }
 
@@ -261,8 +296,12 @@ export default class IndexController {
     if (!item) return;
     navigator.clipboard
       .writeText(item.templateText)
-      .then(() => alert('Texto de plantilla copiado al portapapeles.'))
-      .catch(() => alert('Error al copiar al portapapeles.'));
+      .then(() =>
+        this.showAlert('Texto de plantilla copiado al portapapeles.', 'success')
+      )
+      .catch(() =>
+        this.showAlert('Error al copiar al portapapeles.', 'danger')
+      );
   }
 
   editItem(tagIndex, itemId) {
@@ -273,19 +312,47 @@ export default class IndexController {
   }
 
   lockItem(tagIndex, itemId) {
-    alert('Funcionalidad de permisos pendiente de implementar.');
+    this.showAlert(
+      'Funcionalidad de permisos pendiente de implementar.',
+      'info'
+    );
   }
 
   deleteItem(tagIndex, itemId) {
-    if (!confirm('¿Eliminar esta plantilla de esta etiqueta?')) return;
-    const tagId = this.tags[tagIndex].id;
-    // Solo eliminar la relación con esa etiqueta:
+    const tag = this.tags[tagIndex];
     const item = this.templates.find(t => t.id === itemId);
     if (!item) return;
-    item.tags = item.tags.filter(tid => tid !== tagId);
-    TemplateRepository.save(item);
-    this.templates = TemplateRepository.getAll();
-    this.renderTags();
+
+    this.showDeleteConfirm('¿Eliminar esta plantilla de esta etiqueta?', () => {
+      const tagId = tag.id;
+      // Solo eliminar la relación con esa etiqueta:
+      item.tags = item.tags.filter(tid => tid !== tagId);
+      TemplateRepository.save(item);
+      this.templates = TemplateRepository.getAll();
+      this.renderTags();
+    });
+  }
+
+  showDeleteConfirm(message, onConfirm) {
+    const modal = new bootstrap.Modal(
+      document.getElementById('deleteConfirmModal')
+    );
+    const messageEl = document.getElementById('deleteConfirmMessage');
+    const confirmButton = document.getElementById('deleteConfirmButton');
+
+    messageEl.textContent = message;
+
+    // Remover listeners anteriores
+    const newConfirmButton = confirmButton.cloneNode(true);
+    confirmButton.parentNode.replaceChild(newConfirmButton, confirmButton);
+
+    // Agregar nuevo listener
+    newConfirmButton.addEventListener('click', () => {
+      modal.hide();
+      onConfirm();
+    });
+
+    modal.show();
   }
 
   // Conectar los listeners necesarios para drag&drop al inicializar
