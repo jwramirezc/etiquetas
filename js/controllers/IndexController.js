@@ -80,6 +80,9 @@ export default class IndexController {
             </button>
             <span class="tag-color" style="background:${tag.color}"></span>
             <span class="tag-name">${tag.name}</span>
+            ${
+              tag.name !== 'Sin clasificar'
+                ? `
             <div class="dropdown">
               <button class="btn btn-link p-0 tag-options" type="button" data-bs-toggle="dropdown">
                 <i class="bi bi-three-dots-vertical"></i>
@@ -102,6 +105,9 @@ export default class IndexController {
                 </li>
               </ul>
             </div>
+            `
+                : ''
+            }
           </div>
           <div class="tag-content" style="display: none;">
             <ul class="list-group list-group-flush">
@@ -158,6 +164,11 @@ export default class IndexController {
       });
 
       // Agregamos clase para arrastrar
+      const dragHandle = tagDiv.querySelector('.drag-handle');
+      dragHandle.addEventListener('mousedown', e => {
+        e.stopPropagation(); // Prevent the click from triggering the header click
+      });
+
       tagDiv.addEventListener('dragstart', () => {
         tagDiv.classList.add('dragging');
       });
@@ -185,14 +196,21 @@ export default class IndexController {
   updateTagOrder() {
     const newOrder = Array.from(
       document.querySelectorAll('#tagsList .tag-card .tag-name')
-    ).map(span => {
-      // Buscar la etiqueta cuyo nombre coincide
-      return this.tags.find(t => t.name === span.innerText);
-    });
-    this.tags = newOrder.filter(Boolean);
-    // Guardar el nuevo orden en el repositorio
-    this.tags.forEach(tag => TagRepository.save(tag));
-    this.renderTags(); // re-renderizamos
+    )
+      .map(span => {
+        // Buscar la etiqueta cuyo nombre coincide
+        return this.tags.find(t => t.name === span.innerText);
+      })
+      .filter(Boolean); // Remove any null/undefined values
+
+    // Actualizar el array local
+    this.tags = newOrder;
+
+    // Guardar el nuevo orden en localStorage
+    localStorage.setItem(
+      TagRepository.STORAGE_KEY,
+      JSON.stringify(newOrder.map(tag => tag.toJSON()))
+    );
   }
 
   // Métodos CRUD para etiquetas (edit, delete, share)

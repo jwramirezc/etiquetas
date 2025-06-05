@@ -65,7 +65,18 @@ export default class TagFormController {
       // Crear nueva
       const newId = TagRepository.getNextId();
       const newTag = new Tag(newId, nombre, color);
-      TagRepository.save(newTag);
+
+      // Obtener todas las etiquetas actuales
+      const allTags = TagRepository.getAll();
+
+      // Insertar la nueva etiqueta al inicio
+      allTags.unshift(newTag);
+
+      // Guardar el nuevo orden
+      localStorage.setItem(
+        TagRepository.STORAGE_KEY,
+        JSON.stringify(allTags.map(t => t.toJSON()))
+      );
     }
     window.location.href = 'index.html';
   }

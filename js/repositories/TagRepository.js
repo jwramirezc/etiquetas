@@ -8,7 +8,22 @@ export default class TagRepository {
   // Devuelve un array de instancias Tag
   static getAll() {
     const raw = JSON.parse(localStorage.getItem(this.STORAGE_KEY)) || [];
-    return raw.map(obj => new Tag(obj.id, obj.name, obj.color));
+    const tags = raw.map(obj => new Tag(obj.id, obj.name, obj.color));
+    this.ensureUnclassifiedTag(tags);
+    return tags;
+  }
+
+  // Asegura que exista la etiqueta "Sin clasificar"
+  static ensureUnclassifiedTag(tags) {
+    const unclassifiedTag = tags.find(t => t.name === 'Sin clasificar');
+    if (!unclassifiedTag) {
+      const newTag = new Tag(this.getNextId(), 'Sin clasificar', '#6C757D');
+      tags.push(newTag);
+      localStorage.setItem(
+        this.STORAGE_KEY,
+        JSON.stringify(tags.map(t => t.toJSON()))
+      );
+    }
   }
 
   // Devuelve una instancia Tag o null

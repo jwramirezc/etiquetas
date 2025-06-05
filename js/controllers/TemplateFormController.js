@@ -50,7 +50,7 @@ export default class TemplateFormController {
       this.handleTagKeydown.bind(this)
     );
 
-    // 3) Escuchar “submit” del formulario
+    // 3) Escuchar "submit" del formulario
     this.formEl.addEventListener('submit', this.handleSubmit.bind(this));
   }
 
@@ -127,6 +127,16 @@ export default class TemplateFormController {
         'warning'
       );
       return;
+    }
+
+    // Si no hay etiquetas seleccionadas, asignar a "Sin clasificar"
+    if (this.selectedTagIds.size === 0) {
+      const unclassifiedTag = this.availableTags.find(
+        t => t.name === 'Sin clasificar'
+      );
+      if (unclassifiedTag) {
+        this.selectedTagIds.add(unclassifiedTag.id);
+      }
     }
 
     // Construir objeto Template
