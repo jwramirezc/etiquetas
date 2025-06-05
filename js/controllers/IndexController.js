@@ -294,14 +294,10 @@ export default class IndexController {
   insertItem(tagIndex, itemId) {
     const item = this.templates.find(t => t.id === itemId);
     if (!item) return;
-    navigator.clipboard
-      .writeText(item.templateText)
-      .then(() =>
-        this.showAlert('Texto de plantilla copiado al portapapeles.', 'success')
-      )
-      .catch(() =>
-        this.showAlert('Error al copiar al portapapeles.', 'danger')
-      );
+    this.showAlert(
+      'Funcionalidad de insertar pendiente de implementar',
+      'info'
+    );
   }
 
   editItem(tagIndex, itemId) {
