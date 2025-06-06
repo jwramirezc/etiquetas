@@ -1,23 +1,48 @@
-// app.js
+/**
+ * Archivo principal de la aplicación
+ * Este archivo contiene toda la lógica de la aplicación, incluyendo:
+ * - Manejo de etiquetas y plantillas
+ * - Interacción con el usuario
+ * - Almacenamiento de datos
+ * - Funcionalidades de drag & drop
+ */
 
-// ======== CARGA INICIAL DE DATOS ========
+// // ======== CARGA INICIAL DE DATOS ========
 
-// Carga etiquetas desde localStorage
-let tags = JSON.parse(localStorage.getItem('tags')) || [];
+// // Carga etiquetas desde localStorage
+// let tags = JSON.parse(localStorage.getItem('tags')) || [];
 
-// Carga plantillas desde localStorage
-let templates = JSON.parse(localStorage.getItem('templates')) || [];
+// // Carga plantillas desde localStorage
+// let templates = JSON.parse(localStorage.getItem('templates')) || [];
 
 // ======== FUNCIONES AUXILIARES ========
 
-// Genera un ID único para nuevas plantillas
+/**
+ * Genera un nuevo ID único para plantillas
+ * Esta función:
+ * 1. Lee el último ID usado desde localStorage
+ * 2. Le suma 1 para crear un nuevo ID
+ * 3. Guarda el nuevo ID en localStorage
+ * 4. Retorna el nuevo ID
+ *
+ * @returns {number} El nuevo ID generado
+ */
 function generarNuevoTemplateId() {
   let nextId = parseInt(localStorage.getItem('lastTemplateId') || '0', 10) + 1;
   localStorage.setItem('lastTemplateId', nextId);
   return nextId;
 }
 
-// Genera un ID único para nuevas etiquetas
+/**
+ * Genera un nuevo ID único para etiquetas
+ * Esta función:
+ * 1. Lee el último ID usado desde localStorage
+ * 2. Le suma 1 para crear un nuevo ID
+ * 3. Guarda el nuevo ID en localStorage
+ * 4. Retorna el nuevo ID
+ *
+ * @returns {number} El nuevo ID generado
+ */
 function generarNuevoTagId() {
   let nextId = parseInt(localStorage.getItem('lastTagId') || '0', 10) + 1;
   localStorage.setItem('lastTagId', nextId);
@@ -26,6 +51,13 @@ function generarNuevoTagId() {
 
 // ======== LÓGICA PRINCIPAL ========
 
+/**
+ * Inicializa la aplicación cuando el DOM está listo
+ * Esta función:
+ * 1. Obtiene todos los elementos necesarios del DOM
+ * 2. Configura los eventos y listeners
+ * 3. Inicializa la interfaz de usuario
+ */
 document.addEventListener('DOMContentLoaded', () => {
   // Elementos del DOM en index.html
   const pageTitle = document.getElementById('pageTitle');
@@ -156,7 +188,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Función auxiliar: agrega una etiqueta seleccionada al contenedor
+    /**
+     * Agrega una etiqueta seleccionada al contenedor visual
+     * Esta función:
+     * 1. Crea un elemento visual para la etiqueta
+     * 2. Agrega el color y nombre de la etiqueta
+     * 3. Agrega un botón para remover la etiqueta
+     * 4. Configura el evento para eliminar la etiqueta al hacer clic en el botón
+     *
+     * @param {Object} tagObj - El objeto etiqueta a agregar
+     */
     function addTagToContainer(tagObj) {
       const span = document.createElement('span');
       span.className = 'selected-tag';
@@ -219,8 +260,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // ================== FUNCIONES COMUNES ==================
 
   /**
-   * Renderiza la lista de etiquetas en el DOM (index.html)
-   * Conserva exactamente la estructura original para no romper estilos ni drag & drop
+   * Renderiza la lista de etiquetas en el DOM
+   * Esta función:
+   * 1. Limpia la lista actual de etiquetas
+   * 2. Para cada etiqueta:
+   *    - Filtra las plantillas asociadas
+   *    - Crea el elemento visual de la etiqueta
+   *    - Agrega los botones de acción
+   *    - Configura los eventos de drag & drop
+   * 3. Actualiza el DOM con las nuevas etiquetas
    */
   function renderTags() {
     if (!tagsList) return;
@@ -352,6 +400,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ======== CRUD ETIQUETAS ========
 
+  /**
+   * Edita una etiqueta existente
+   * Esta función:
+   * 1. Obtiene la etiqueta por su índice
+   * 2. Redirige a la página de edición con el ID de la etiqueta
+   *
+   * @param {number} index - El índice de la etiqueta a editar
+   */
   window.editTag = function (index) {
     const tag = tags[index];
     if (!tag) return;
@@ -359,6 +415,16 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = `tag.html?tagId=${encodeURIComponent(tag.id)}`;
   };
 
+  /**
+   * Elimina una etiqueta
+   * Esta función:
+   * 1. Verifica si la etiqueta tiene plantillas asociadas
+   * 2. Si tiene plantillas, muestra un mensaje de error
+   * 3. Si no tiene plantillas, pide confirmación
+   * 4. Si se confirma, elimina la etiqueta y actualiza la vista
+   *
+   * @param {number} index - El índice de la etiqueta a eliminar
+   */
   window.deleteTag = function (index) {
     const tag = tags[index];
     if (!tag) return;
@@ -394,6 +460,14 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTags();
   };
 
+  /**
+   * Muestra un mensaje de compartir etiqueta (pendiente de implementar)
+   * Esta función:
+   * 1. Obtiene la etiqueta por su índice
+   * 2. Muestra un mensaje indicando que la funcionalidad está pendiente
+   *
+   * @param {number} index - El índice de la etiqueta a compartir
+   */
   window.shareTag = function (index) {
     const tag = tags[index];
     if (!tag) return;
@@ -404,6 +478,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ======== CRUD PLANTILLAS ========
 
+  /**
+   * Inserta una plantilla (pendiente de implementar)
+   * Esta función:
+   * 1. Obtiene la plantilla por su ID
+   * 2. Copia el texto de la plantilla al portapapeles
+   * 3. Muestra un mensaje de éxito o error
+   *
+   * @param {number} tagIndex - El índice de la etiqueta
+   * @param {number} itemId - El ID de la plantilla
+   */
   window.insertItem = function (tagIndex, itemId) {
     const item = templates.find(t => t.id === itemId);
     if (!item) return;
@@ -414,6 +498,16 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(() => alert('Error al copiar al portapapeles.'));
   };
 
+  /**
+   * Edita una plantilla existente
+   * Esta función:
+   * 1. Obtiene la plantilla por su ID
+   * 2. Guarda la plantilla en localStorage para editarla
+   * 3. Redirige a la página de edición
+   *
+   * @param {number} tagIndex - El índice de la etiqueta
+   * @param {number} itemId - El ID de la plantilla
+   */
   window.editItem = function (tagIndex, itemId) {
     const item = templates.find(t => t.id === itemId);
     if (!item) return;
@@ -422,10 +516,28 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = 'template.html';
   };
 
+  /**
+   * Muestra un mensaje de bloquear plantilla (pendiente de implementar)
+   * Esta función:
+   * 1. Muestra un mensaje indicando que la funcionalidad está pendiente
+   *
+   * @param {number} tagIndex - El índice de la etiqueta
+   * @param {number} itemId - El ID de la plantilla
+   */
   window.lockItem = function (tagIndex, itemId) {
     alert('Funcionalidad de permisos pendiente de implementar.');
   };
 
+  /**
+   * Elimina una plantilla de una etiqueta
+   * Esta función:
+   * 1. Pide confirmación al usuario
+   * 2. Si se confirma, elimina la relación entre la plantilla y la etiqueta
+   * 3. Actualiza el almacenamiento y la vista
+   *
+   * @param {number} tagIndex - El índice de la etiqueta
+   * @param {number} itemId - El ID de la plantilla
+   */
   window.deleteItem = function (tagIndex, itemId) {
     if (!confirm('¿Eliminar esta plantilla de esta etiqueta?')) return;
     const tagId = tags[tagIndex].id;
