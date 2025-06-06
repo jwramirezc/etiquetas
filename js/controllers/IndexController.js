@@ -230,23 +230,26 @@ export default class IndexController {
 
   // Cuando termina el drag & drop: actualiza el orden en localStorage
   updateTagOrder() {
+    // Reconstruye this.tags según el texto contenido en cada <span class="tag-name">
     const newOrder = Array.from(
       document.querySelectorAll('#tagsList .tag-card .tag-name')
     )
       .map(span => {
-        // Buscar la etiqueta cuyo nombre coincide
         return this.tags.find(t => t.name === span.innerText);
       })
-      .filter(Boolean); // Remove any null/undefined values
+      .filter(Boolean);
 
-    // Actualizar el array local
+    // Actualiza el array interno
     this.tags = newOrder;
 
-    // Guardar el nuevo orden en localStorage
+    // Guarda en localStorage
     localStorage.setItem(
       TagRepository.STORAGE_KEY,
       JSON.stringify(newOrder.map(tag => tag.toJSON()))
     );
+
+    // ———> ¡LÍNEA PARA VOLVER A DIBUJARLOS!
+    this.renderTags();
   }
 
   // Métodos CRUD para etiquetas (edit, delete, share)

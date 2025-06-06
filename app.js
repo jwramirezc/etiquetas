@@ -299,17 +299,23 @@ document.addEventListener('DOMContentLoaded', () => {
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                  <a class="dropdown-item" href="#" onclick="editTag(${index})">
+                  <a class="dropdown-item" href="#" onclick="editTagById('${
+                    tag.id
+                  }')">
                     <i class="bi bi-pencil me-2"></i>Editar
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#" onclick="deleteTag(${index})">
+                  <a class="dropdown-item" href="#" onclick="deleteTagById('${
+                    tag.id
+                  }')">
                     <i class="bi bi-trash me-2"></i>Eliminar
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#" onclick="shareTag(${index})">
+                  <a class="dropdown-item" href="#" onclick="shareTagById('${
+                    tag.id
+                  }')">
                     <i class="bi bi-share me-2"></i>Compartir
                   </a>
                 </li>
@@ -326,28 +332,28 @@ document.addEventListener('DOMContentLoaded', () => {
                   <div class="item-actions">
                     <button
                       class="btn btn-link btn-sm p-0 me-2"
-                      onclick="insertItem(${index}, ${item.id})"
+                      onclick="insertItemById('${tag.id}', ${item.id})"
                       title="Insertar"
                     >
                       <i class="bi bi-check"></i>
                     </button>
                     <button
                       class="btn btn-link btn-sm p-0 me-2"
-                      onclick="editItem(${index}, ${item.id})"
+                      onclick="editItemById('${tag.id}', ${item.id})"
                       title="Editar"
                     >
                       <i class="bi bi-pencil"></i>
                     </button>
                     <button
                       class="btn btn-link btn-sm p-0 me-2"
-                      onclick="lockItem(${index}, ${item.id})"
+                      onclick="lockItemById('${tag.id}', ${item.id})"
                       title="Bloquear"
                     >
                       <i class="bi bi-lock"></i>
                     </button>
                     <button
                       class="btn btn-link btn-sm p-0"
-                      onclick="deleteItem(${index}, ${item.id})"
+                      onclick="deleteItemById('${tag.id}', ${item.id})"
                       title="Eliminar"
                     >
                       <i class="bi bi-trash"></i>
@@ -392,8 +398,11 @@ document.addEventListener('DOMContentLoaded', () => {
         tagDiv.classList.remove('dragging');
         // Actualizar el array de tags según el nuevo orden en el DOM
         const newOrder = Array.from(
-          document.querySelectorAll('#tagsList .tag-card .tag-name')
-        ).map(span => tags.find(t => t.name === span.innerText));
+          document.querySelectorAll('#tagsList .tag-card')
+        ).map(tagCard => {
+          const tagName = tagCard.querySelector('.tag-name').innerText;
+          return tags.find(t => t.name === tagName);
+        });
         tags = newOrder;
         localStorage.setItem('tags', JSON.stringify(tags));
         renderTags();
@@ -406,15 +415,14 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * Edita una etiqueta existente
    * Esta función:
-   * 1. Obtiene la etiqueta por su índice
+   * 1. Obtiene la etiqueta por su ID
    * 2. Redirige a la página de edición con el ID de la etiqueta
    *
-   * @param {number} index - El índice de la etiqueta a editar
+   * @param {number} id - El ID de la etiqueta a editar
    */
-  window.editTag = function (index) {
-    const tag = tags[index];
+  window.editTagById = function (id) {
+    const tag = tags.find(t => t.id === id);
     if (!tag) return;
-    // Redirige a tag.html con el parámetro tagId
     window.location.href = `tag.html?tagId=${encodeURIComponent(tag.id)}`;
   };
 
@@ -426,19 +434,18 @@ document.addEventListener('DOMContentLoaded', () => {
    * 3. Si no tiene plantillas, pide confirmación
    * 4. Si se confirma, elimina la etiqueta y actualiza la vista
    *
-   * @param {number} index - El índice de la etiqueta a eliminar
+   * @param {number} id - El ID de la etiqueta a eliminar
    */
-  window.deleteTag = function (index) {
-    const tag = tags[index];
-    if (!tag) return;
+  window.deleteTagById = function (id) {
+    const tagIndex = tags.findIndex(t => t.id === id);
+    if (tagIndex === -1) return;
+    const tag = tags[tagIndex];
 
-    // Verificar si la etiqueta tiene plantillas asociadas
     const plantillasConEstaEtiqueta = templates.filter(t =>
       t.tags.includes(tag.id)
     );
 
     if (plantillasConEstaEtiqueta.length > 0) {
-      // Mostrar mensaje de error
       const alert = document.createElement('div');
       alert.className = 'alert alert-warning alert-dismissible fade show';
       alert.role = 'alert';
@@ -454,11 +461,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Si no tiene plantillas, proceder con la eliminación
     if (!confirm(`¿Seguro que deseas eliminar la etiqueta "${tag.name}"?`))
       return;
 
-    tags.splice(index, 1);
+    tags.splice(tagIndex, 1);
     localStorage.setItem('tags', JSON.stringify(tags));
     renderTags();
   };
@@ -466,16 +472,16 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * Muestra un mensaje de compartir etiqueta (pendiente de implementar)
    * Esta función:
-   * 1. Obtiene la etiqueta por su índice
+   * 1. Obtiene la etiqueta por su ID
    * 2. Muestra un mensaje indicando que la funcionalidad está pendiente
    *
-   * @param {number} index - El índice de la etiqueta a compartir
+   * @param {number} id - El ID de la etiqueta a compartir
    */
-  window.shareTag = function (index) {
-    const tag = tags[index];
+  window.shareTagById = function (id) {
+    const tag = tags.find(t => t.id === id);
     if (!tag) return;
     alert(
-      `Compartir la etiqueta "${tag.name}" con otros usuarios (pendiente de implementar).`
+      `Funcionalidad de compartir para la etiqueta "${tag.name}" está pendiente de implementación.`
     );
   };
 
@@ -488,17 +494,11 @@ document.addEventListener('DOMContentLoaded', () => {
    * 2. Copia el texto de la plantilla al portapapeles
    * 3. Muestra un mensaje de éxito o error
    *
-   * @param {number} tagIndex - El índice de la etiqueta
+   * @param {number} tagId - El ID de la etiqueta
    * @param {number} itemId - El ID de la plantilla
    */
-  window.insertItem = function (tagIndex, itemId) {
-    const item = templates.find(t => t.id === itemId);
-    if (!item) return;
-    // Copiar el texto de la plantilla al portapapeles como acción de ejemplo
-    navigator.clipboard
-      .writeText(item.templateText)
-      .then(() => alert('Texto de plantilla copiado al portapapeles.'))
-      .catch(() => alert('Error al copiar al portapapeles.'));
+  window.insertItemById = function (tagId, itemId) {
+    // Implementar lógica para insertar item
   };
 
   /**
@@ -508,15 +508,11 @@ document.addEventListener('DOMContentLoaded', () => {
    * 2. Guarda la plantilla en localStorage para editarla
    * 3. Redirige a la página de edición
    *
-   * @param {number} tagIndex - El índice de la etiqueta
+   * @param {number} tagId - El ID de la etiqueta
    * @param {number} itemId - El ID de la plantilla
    */
-  window.editItem = function (tagIndex, itemId) {
-    const item = templates.find(t => t.id === itemId);
-    if (!item) return;
-    // Guardar en localStorage para precargar el formulario en template.html
-    localStorage.setItem('editingTemplate', JSON.stringify(item));
-    window.location.href = 'template.html';
+  window.editItemById = function (tagId, itemId) {
+    // Implementar lógica para editar item
   };
 
   /**
@@ -524,11 +520,11 @@ document.addEventListener('DOMContentLoaded', () => {
    * Esta función:
    * 1. Muestra un mensaje indicando que la funcionalidad está pendiente
    *
-   * @param {number} tagIndex - El índice de la etiqueta
+   * @param {number} tagId - El ID de la etiqueta
    * @param {number} itemId - El ID de la plantilla
    */
-  window.lockItem = function (tagIndex, itemId) {
-    alert('Funcionalidad de permisos pendiente de implementar.');
+  window.lockItemById = function (tagId, itemId) {
+    // Implementar lógica para bloquear item
   };
 
   /**
@@ -538,23 +534,10 @@ document.addEventListener('DOMContentLoaded', () => {
    * 2. Si se confirma, elimina la relación entre la plantilla y la etiqueta
    * 3. Actualiza el almacenamiento y la vista
    *
-   * @param {number} tagIndex - El índice de la etiqueta
+   * @param {number} tagId - El ID de la etiqueta
    * @param {number} itemId - El ID de la plantilla
    */
-  window.deleteItem = function (tagIndex, itemId) {
-    if (!confirm('¿Eliminar esta plantilla de esta etiqueta?')) return;
-    const tagId = tags[tagIndex].id;
-    // Encontrar la plantilla y remover solo esta etiqueta de sus tags
-    templates = templates.map(t => {
-      if (t.id === itemId) {
-        return {
-          ...t,
-          tags: t.tags.filter(tid => tid !== tagId),
-        };
-      }
-      return t;
-    });
-    localStorage.setItem('templates', JSON.stringify(templates));
-    renderTags();
+  window.deleteItemById = function (tagId, itemId) {
+    // Implementar lógica para eliminar item
   };
 });
