@@ -58,11 +58,10 @@ export default class IndexController {
   }
 
   initialize() {
-    // Opcional: si quieres cambiar dinámicamente el título
+    // Opcional: si para cambiar dinámicamente el título
     if (this.pageTitleEl)
       this.pageTitleEl.innerText = 'Administrador de Plantillas';
-    if (this.sectionTitleEl)
-      this.sectionTitleEl.innerText = 'Etiquetas y Plantillas';
+    if (this.sectionTitleEl) this.sectionTitleEl.innerText = 'Mis Plantillas';
     this.renderTags();
     this.attachDragAndDropListeners();
 
