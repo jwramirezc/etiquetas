@@ -281,7 +281,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const tagDiv = document.createElement('div');
       tagDiv.className = 'col-md-4';
       tagDiv.setAttribute('draggable', 'true');
-      tagDiv.dataset.index = index;
+      // ←————————— Aquí agregamos data-id
+      tagDiv.dataset.id = tag.id;
+      // ——————————→
 
       tagDiv.innerHTML = `
         <div class="tag-card">
@@ -371,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Drag & Drop para reordenar etiquetas (modelo original)
       tagDiv.addEventListener('dragstart', e => {
         tagDiv.classList.add('dragging');
+        e.dataTransfer.setData('text/plain', tag.id); // Guardamos el ID en el dataTransfer
       });
       tagDiv.addEventListener('dragover', e => {
         e.preventDefault();
@@ -387,13 +390,58 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       tagDiv.addEventListener('dragend', e => {
         tagDiv.classList.remove('dragging');
-        // Actualizar el array de tags según el nuevo orden en el DOM
-        const newOrder = Array.from(
-          document.querySelectorAll('#tagsList .tag-card .tag-name')
-        ).map(span => tags.find(t => t.name === span.innerText));
-        tags = newOrder;
-        localStorage.setItem('tags', JSON.stringify(tags));
-        renderTags();
+
+        try {
+          // Obtener el nuevo orden basado en los IDs de las etiquetas
+          const newOrder = Array.from(
+            document.querySelectorAll('#tagsList .col-md-4')
+          )
+            .map(div => {
+              const tagId = parseInt(div.dataset.id);
+              return tags.find(t => t.id === tagId);
+            })
+            .filter(tag => tag !== undefined); // Filtrar cualquier undefined que pudiera surgir
+
+          // Actualizar el array de tags con el nuevo orden
+          tags = newOrder;
+
+          // Guardar en localStorage
+          localStorage.setItem('tags', JSON.stringify(tags));
+
+          // Mostrar feedback visual
+          const alert = document.createElement('div');
+          alert.className = 'alert alert-success alert-dismissible fade show';
+          alert.role = 'alert';
+          alert.innerHTML = `
+            <i class="bi bi-check-circle me-2"></i>
+            Orden de etiquetas actualizado correctamente
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          `;
+          if (alertContainer) {
+            alertContainer.appendChild(alert);
+            setTimeout(() => alert.remove(), 2000);
+          }
+        } catch (error) {
+          console.error(
+            'Error al actualizar el orden de las etiquetas:',
+            error
+          );
+          // Mostrar mensaje de error
+          const alert = document.createElement('div');
+          alert.className = 'alert alert-danger alert-dismissible fade show';
+          alert.role = 'alert';
+          alert.innerHTML = `
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Error al actualizar el orden de las etiquetas
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          `;
+          if (alertContainer) {
+            alertContainer.appendChild(alert);
+            setTimeout(() => alert.remove(), 3000);
+          }
+          // Restaurar el orden original
+          renderTags();
+        }
       });
     });
   }
